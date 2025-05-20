@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота №5 - Події</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .task {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        pre {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 10px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        form {
+            margin: 10px 0;
+        }
+        input, textarea {
+            margin: 5px 0;
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .binary-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        .binary-square {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ccc;
+        }
+        .color-palette {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        .color-item {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+        }
+        .color-rectangle {
+            width: 200px;
+            height: 100px;
+            margin: 10px 0;
+            border: 1px solid #000;
+        }
+        .text-block {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            position: relative;
+        }
+        .text-block-buttons {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+        .pixel-grid {
+            display: flex;
+            flex-wrap: wrap;
+            width: 210px;
+            margin: 10px 0;
+        }
+        .pixel {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #eee;
+            cursor: pointer;
+        }
+        .card-container {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .card {
+            width: 100px;
+            height: 150px;
+            background-color: #3498db;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 1s;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card-front {
+            background-color: #e74c3c;
+            transform: rotateY(180deg);
+        }
+        .card-back {
+            background-color: #3498db;
+        }
+        .draggable-container {
+            width: 300px;
+            height: 200px;
+            border: 2px solid #3498db;
+            position: relative;
+            margin: 10px 0;
+        }
+        .draggable-item {
+            width: 50px;
+            height: 50px;
+            background-color: #e74c3c;
+            position: absolute;
+            cursor: move;
+        }
+        .forum-message {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .book-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .book-item {
+            padding: 8px;
+            margin: 5px 0;
+            cursor: pointer;
+            border: 1px solid #ddd;
+        }
+        .book-item.selected {
+            background-color: #2ecc71;
+            color: white;
+        }
+        .escaping-button-container {
+            width: 300px;
+            height: 200px;
+            border: 2px solid #3498db;
+            position: relative;
+            margin: 10px 0;
+        }
+        .escaping-button {
+            position: absolute;
+            padding: 8px 15px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Лабораторна робота №5 - Події</h1>
+
+    <!-- Завдання 1 -->
+    <div class="task">
+        <h2>Завдання 1: Таблиця користувачів з формою додавання</h2>
+        <table id="usersTable">
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Ім'я</th>
+                    <th>Прізвище</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Іван</td>
+                    <td>Петров</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Марія</td>
+                    <td>Іванова</td>
+                </tr>
+            </tbody>
+        </table>
+        <form id="addUserForm">
+            <input type="text" id="firstName" placeholder="Ім'я" required>
+            <input type="text" id="lastName" placeholder="Прізвище" required>
+            <button type="submit">Додати користувача</button>
+        </form>
+        <h3>Код:</h3>
+        <pre>
+document.getElementById('addUserForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const firstName = document.getElementById('firstName').value;
+    const lastName = document.getElementById('lastName').value;
+    const table = document.getElementById('usersTable').getElementsByTagName('tbody')[0];
+    const rowCount = table.rows.length + 1;
+    
+    const newRow = table.insertRow();
+    const cell1 = newRow.insertCell(0);
+    const cell2 = newRow.insertCell(1);
+    const cell3 = newRow.insertCell(2);
+    
+    cell1.textContent = rowCount;
+    cell2.textContent = firstName;
+    cell3.textContent = lastName;
+    
+    this.reset();
+});</pre>
+    </div>
+
+    <!-- Завдання 2 -->
+    <div class="task">
+        <h2>Завдання 2: Бінарні квадратики</h2>
+        <textarea id="binaryInput" placeholder="Введіть послідовність з 0 та 1 (наприклад: 010101)"></textarea>
+        <button onclick="generateBinarySquares()">Створити квадратики</button>
+        <div class="binary-container" id="binaryContainer"></div>
+        <h3>Код:</h3>
+        <pre>
+function generateBinarySquares() {
+    const input = document.getElementById('binaryInput').value;
+    const container = document.getElementById('binaryContainer');
+    container.innerHTML = '';
+    
+    for (let char of input) {
+        const square = document.createElement('div');
+        square.className = 'binary-square';
+        square.style.backgroundColor = char === '1' ? 'black' : 'white';
+        container.appendChild(square);
+    }
+}</pre>
+    </div>
+
+    <!-- Завдання 3 -->
+    <div class="task">
+        <h2>Завдання 3: Палітра кольорів з градієнтною заливкою</h2>
+        <div class="color-palette" id="colorPalette">
+            <div class="color-item" style="background-color: #ff0000;"></div>
+            <div class="color-item" style="background-color: #00ff00;"></div>
+            <div class="color-item" style="background-color: #0000ff;"></div>
+            <div class="color-item" style="background-color: #ffff00;"></div>
+            <div class="color-item" style="background-color: #ff00ff;"></div>
+            <div class="color-item" style="background-color: #00ffff;"></div>
+        </div>
+        <div class="color-rectangle" id="colorRectangle"></div>
+        <h3>Код:</h3>
+        <pre>
+const colorItems = document.querySelectorAll('.color-item');
+const colorRectangle = document.getElementById('colorRectangle');
+let selectedColors = [];
+
+colorItems.forEach(item => {
+    item.addEventListener('click', function() {
+        const color = this.style.backgroundColor;
+        
+        if (selectedColors.includes(color)) {
+            selectedColors = selectedColors.filter(c => c !== color);
+        } else {
+            selectedColors.push(color);
+        }
+        
+        this.style.border = selectedColors.includes(color) ? '2px solid black' : '1px solid #ccc';
+        
+        if (selectedColors.length === 0) {
+            colorRectangle.style.background = 'none';
+        } else if (selectedColors.length === 1) {
+            colorRectangle.style.background = selectedColors[0];
+        } else {
+            colorRectangle.style.background = `linear-gradient(to right, ${selectedColors.join(', ')})`;
+        }
+    });
+});</pre>
+    </div>
+
+    <!-- Завдання 4 -->
+    <div class="task">
+        <h2>Завдання 4: Текстові блоки з редагуванням</h2>
+        <div class="text-block" id="textBlock1">
+            <div class="text-block-buttons">
+                <button class="edit-btn">Редагувати</button>
+                <button class="delete-btn">Видалити</button>
+            </div>
+            <div class="text-content">Це перший текстовий блок. Натисніть кнопку "Редагувати", щоб змінити його.</div>
+        </div>
+        <div class="text-block" id="textBlock2">
+            <div class="text-block-buttons">
+                <button class="edit-btn">Редагувати</button>
+                <button class="delete-btn">Видалити</button>
+            </div>
+            <div class="text-content">Це другий текстовий блок. Ви можете його видалити або редагувати.</div>
+        </div>
+        <h3>Код:</h3>
+        <pre>
+document.querySelectorAll('.text-block').forEach(block => {
+    const editBtn = block.querySelector('.edit-btn');
+    const deleteBtn = block.querySelector('.delete-btn');
+    const textContent = block.querySelector('.text-content');
+    
+    deleteBtn.addEventListener('click', function() {
+        block.remove();
+    });
+    
+    editBtn.addEventListener('click', function() {
+        const currentText = textContent.textContent;
+        const textarea = document.createElement('textarea');
+        textarea.value = currentText;
+        textarea.style.width = '100%';
+        textarea.style.height = '100px';
+        
+        textContent.replaceWith(textarea);
+        textarea.focus();
+        
+        textarea.addEventListener('blur', function() {
+            const newText = this.value;
+            textContent.textContent = newText;
+            this.replaceWith(textContent);
+        });
+    });
+});</pre>
+    </div>
+
+    <!-- Завдання 5 -->
+    <div class="task">
+        <h2>Завдання 5: Піксельний редактор</h2>
+        <div class="color-palette" id="pixelColorPalette">
+            <div class="color-item" style="background-color: #ff0000;"></div>
+            <div class="color-item" style="background-color: #00ff00;"></div>
+            <div class="color-item" style="background-color: #0000ff;"></div>
+            <div class="color-item" style="background-color: #000000;"></div>
+            <div class="color-item" style="background-color: #ffffff;"></div>
+        </div>
+        <div class="pixel-grid" id="pixelGrid"></div>
+        <h3>Код:</h3>
+        <pre>
+const pixelColors = document.querySelectorAll('#pixelColorPalette .color-item');
+const pixelGrid = document.getElementById('pixelGrid');
+let selectedColor = '#000000';
+
+// Створення сітки
+for (let i = 0; i < 100; i++) {
+    const pixel = document.createElement('div');
+    pixel.className = 'pixel';
+    pixel.addEventListener('click', function() {
+        this.style.backgroundColor = selectedColor;
+    });
+    pixelGrid.appendChild(pixel);
+}
+
+// Вибір кольору
+pixelColors.forEach(color => {
+    color.addEventListener('click', function() {
+        selectedColor = this.style.backgroundColor;
+        pixelColors.forEach(c => c.style.border = '1px solid #ccc');
+        this.style.border = '2px solid black';
+    });
+});</pre>
+    </div>
+
+    <!-- Завдання 6 -->
+    <div class="task">
+        <h2>Завдання 6: Карти, що перевертаються</h2>
+        <div class="card-container">
+            <div class="card">
+                <div class="card-face card-front">A</div>
+                <div class="card-face card-back"></div>
+            </div>
+            <div class="card">
+                <div class="card-face card-front">K</div>
+                <div class="card-face card-back"></div>
+            </div>
+            <div class="card">
+                <div class="card-face card-front">Q</div>
+                <div class="card-face card-back"></div>
+            </div>
+        </div>
+        <h3>Код:</h3>
+        <pre>
+document.querySelectorAll('.card').forEach(card => {
+    let isFlipped = false;
+    
+    card.addEventListener('click', function() {
+        isFlipped = !isFlipped;
+        this.style.transform = isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
+    });
+});</pre>
+    </div>
+
+    <!-- Завдання 7 -->
+    <div class="task">
+        <h2>Завдання 7: Перетягування елементів</h2>
+        <div class="draggable-container" id="draggableContainer">
+            <div class="draggable-item" id="draggableItem"></div>
+        </div>
+        <h3>Код:</h3>
+        <pre>
+const draggableItem = document.getElementById('draggableItem');
+const container = document.getElementById('draggableContainer');
+let isDragging = false;
+let offsetX, offsetY;
+
+draggableItem.addEventListener('mousedown', function(e) {
+    isDragging = true;
+    offsetX = e.clientX - this.getBoundingClientRect().left;
+    offsetY = e.clientY - this.getBoundingClientRect().top;
+    this.style.cursor = 'grabbing';
+});
+
+document.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    
+    const containerRect = container.getBoundingClientRect();
+    const itemWidth = draggableItem.offsetWidth;
+    const itemHeight = draggableItem.offsetHeight;
+    
+    let x = e.clientX - containerRect.left - offsetX;
+    let y = e.clientY - containerRect.top - offsetY;
+    
+    // Обмеження, щоб елемент не виходив за межі контейнера
+    x = Math.max(0, Math.min(x, containerRect.width - itemWidth));
+    y = Math.max(0, Math.min(y, containerRect.height - itemHeight));
+    
+    draggableItem.style.left = `${x}px`;
+    draggableItem.style.top = `${y}px`;
+});
+
+document.addEventListener('mouseup', function() {
+    isDragging = false;
+    draggableItem.style.cursor = 'move';
+});</pre>
+    </div>
+
+    <!-- Завдання 8 -->
+    <div class="task">
+        <h2>Завдання 8: Форум з повідомленнями</h2>
+        <div id="forumMessages">
+            <div class="forum-message">
+                <h3>Користувач 1</h3>
+                <p>Привіт! Це перше повідомлення на форумі.</p>
+            </div>
+            <div class="forum-message">
+                <h3>Користувач 2</h3>
+                <p>Доброго дня! Я радий бути частиною цього форуму.</p>
+            </div>
+        </div>
+        <form id="forumForm">
+            <input type="text" id="messageAuthor" placeholder="Ваше ім'я" required>
+            <textarea id="messageText" placeholder="Ваше повідомлення" required></textarea>
+            <button type="submit">Додати повідомлення</button>
+        </form>
+        <h3>Код:</h3>
+        <pre>
+document.getElementById('forumForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const author = document.getElementById('messageAuthor').value;
+    const text = document.getElementById('messageText').value;
+    const messagesContainer = document.getElementById('forumMessages');
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'forum-message';
+    messageDiv.innerHTML = `
+        <h3>${author}</h3>
+        <p>${text}</p>
+    `;
+    
+    messagesContainer.appendChild(messageDiv);
+    this.reset();
+});</pre>
+    </div>
+
+    <!-- Завдання 9 -->
+    <div class="task">
+        <h2>Завдання 9: Список книг з виділенням</h2>
+        <ul class="book-list" id="bookList">
+            <li class="book-item" data-id="1">«Володар кілець» Джон Р. Р. Толкін</li>
+            <li class="book-item" data-id="2">«Гордість і упередження» Джейн Остін</li>
+            <li class="book-item" data-id="3">«Темні початки» Філіп Пулман</li>
+            <li class="book-item" data-id="4">«Автостопом по галактиці» Дуглас Адамс</li>
+            <li class="book-item" data-id="5">«Гаррі Поттер і Кубок вогню» Джоан Роулінг</li>
+            <li class="book-item" data-id="6">«Вбити пересмішника» Харпер Лі</li>
+        </ul>
+        <h3>Код:</h3>
+        <pre>
+document.querySelectorAll('.book-item').forEach(item => {
+    item.addEventListener('click', function() {
+        // Знімаємо виділення з усіх елементів
+        document.querySelectorAll('.book-item').forEach(i => {
+            i.classList.remove('selected');
+        });
+        
+        // Додаємо виділення до поточного елемента
+        this.classList.add('selected');
+    });
+});</pre>
+    </div>
+
+    <!-- Завдання 10 -->
+    <div class="task">
+        <h2>Завдання 10: Кнопка, що втікає</h2>
+        <div class="escaping-button-container" id="escapingContainer">
+            <button class="escaping-button" id="escapingButton">Спіймай мене!</button>
+        </div>
+        <h3>Код:</h3>
+        <pre>
+const escapingButton = document.getElementById('escapingButton');
+const escapingContainer = document.getElementById('escapingContainer');
+const containerRect = escapingContainer.getBoundingClientRect();
+const buttonWidth = escapingButton.offsetWidth;
+const buttonHeight = escapingButton.offsetHeight;
+
+escapingButton.addEventListener('mouseover', function() {
+    const maxX = containerRect.width - buttonWidth;
+    const maxY = containerRect.height - buttonHeight;
+    
+    const newX = Math.floor(Math.random() * maxX);
+    const newY = Math.floor(Math.random() * maxY);
+    
+    this.style.left = `${newX}px`;
+    this.style.top = `${newY}px`;
+});</pre>
+    </div>
+
+    <script>
+        // Завдання 1
+        document.getElementById('addUserForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const table = document.getElementById('usersTable').getElementsByTagName('tbody')[0];
+            const rowCount = table.rows.length + 1;
+            
+            const newRow = table.insertRow();
+            const cell1 = newRow.insertCell(0);
+            const cell2 = newRow.insertCell(1);
+            const cell3 = newRow.insertCell(2);
+            
+            cell1.textContent = rowCount;
+            cell2.textContent = firstName;
+            cell3.textContent = lastName;
+            
+            this.reset();
+        });
+
+        // Завдання 2
+        function generateBinarySquares() {
+            const input = document.getElementById('binaryInput').value;
+            const container = document.getElementById('binaryContainer');
+            container.innerHTML = '';
+            
+            for (let char of input) {
+                if (char !== '0' && char !== '1') continue;
+                
+                const square = document.createElement('div');
+                square.className = 'binary-square';
+                square.style.backgroundColor = char === '1' ? 'black' : 'white';
+                container.appendChild(square);
+            }
+        }
+
+        // Завдання 3
+        const colorItems = document.querySelectorAll('.color-item');
+        const colorRectangle = document.getElementById('colorRectangle');
+        let selectedColors = [];
+
+        colorItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const color = this.style.backgroundColor;
+                
+                if (selectedColors.includes(color)) {
+                    selectedColors = selectedColors.filter(c => c !== color);
+                } else {
+                    selectedColors.push(color);
+                }
+                
+                this.style.border = selectedColors.includes(color) ? '2px solid black' : '1px solid #ccc';
+                
+                if (selectedColors.length === 0) {
+                    colorRectangle.style.background = 'none';
+                } else if (selectedColors.length === 1) {
+                    colorRectangle.style.background = selectedColors[0];
+                } else {
+                    colorRectangle.style.background = `linear-gradient(to right, ${selectedColors.join(', ')})`;
+                }
+            });
+        });
+
+        // Завдання 4
+        document.querySelectorAll('.text-block').forEach(block => {
+            const editBtn = block.querySelector('.edit-btn');
+            const deleteBtn = block.querySelector('.delete-btn');
+            const textContent = block.querySelector('.text-content');
+            
+            deleteBtn.addEventListener('click', function() {
+                block.remove();
+            });
+            
+            editBtn.addEventListener('click', function() {
+                const currentText = textContent.textContent;
+                const textarea = document.createElement('textarea');
+                textarea.value = currentText;
+                textarea.style.width = '100%';
+                textarea.style.height = '100px';
+                
+                textContent.replaceWith(textarea);
+                textarea.focus();
+                
+                textarea.addEventListener('blur', function() {
+                    const newText = this.value;
+                    textContent.textContent = newText;
+                    this.replaceWith(textContent);
+                });
+            });
+        });
+
+        // Завдання 5
+        const pixelColors = document.querySelectorAll('#pixelColorPalette .color-item');
+        const pixelGrid = document.getElementById('pixelGrid');
+        let selectedColor = '#000000';
+
+        // Створення сітки
+        for (let i = 0; i < 100; i++) {
+            const pixel = document.createElement('div');
+            pixel.className = 'pixel';
+            pixel.addEventListener('click', function() {
+                this.style.backgroundColor = selectedColor;
+            });
+            pixelGrid.appendChild(pixel);
+        }
+
+        // Вибір кольору
+        pixelColors.forEach(color => {
+            color.addEventListener('click', function() {
+                selectedColor = this.style.backgroundColor;
+                pixelColors.forEach(c => c.style.border = '1px solid #ccc');
+                this.style.border = '2px solid black';
+            });
+        });
+
+        // Завдання 6
+        document.querySelectorAll('.card').forEach(card => {
+            let isFlipped = false;
+            
+            card.addEventListener('click', function() {
+                isFlipped = !isFlipped;
+                this.style.transform = isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
+            });
+        });
+
+        // Завдання 7
+        const draggableItem = document.getElementById('draggableItem');
+        const container = document.getElementById('draggableContainer');
+        let isDragging = false;
+        let offsetX, offsetY;
+
+        draggableItem.addEventListener('mousedown', function(e) {
+            isDragging = true;
+            offsetX = e.clientX - this.getBoundingClientRect().left;
+            offsetY = e.clientY - this.getBoundingClientRect().top;
+            this.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (!isDragging) return;
+            
+            const containerRect = container.getBoundingClientRect();
+            const itemWidth = draggableItem.offsetWidth;
+            const itemHeight = draggableItem.offsetHeight;
+            
+            let x = e.clientX - containerRect.left - offsetX;
+            let y = e.clientY - containerRect.top - offsetY;
+            
+            // Обмеження, щоб елемент не виходив за межі контейнера
+            x = Math.max(0, Math.min(x, containerRect.width - itemWidth));
+            y = Math.max(0, Math.min(y, containerRect.height - itemHeight));
+            
+            draggableItem.style.left = `${x}px`;
+            draggableItem.style.top = `${y}px`;
+        });
+
+        document.addEventListener('mouseup', function() {
+            isDragging = false;
+            draggableItem.style.cursor = 'move';
+        });
+
+        // Завдання 8
+        document.getElementById('forumForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const author = document.getElementById('messageAuthor').value;
+            const text = document.getElementById('messageText').value;
+            const messagesContainer = document.getElementById('forumMessages');
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'forum-message';
+            messageDiv.innerHTML = `
+                <h3>${author}</h3>
+                <p>${text}</p>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            this.reset();
+        });
+
+        // Завдання 9
+        document.querySelectorAll('.book-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Знімаємо виділення з усіх елементів
+                document.querySelectorAll('.book-item').forEach(i => {
+                    i.classList.remove('selected');
+                });
+                
+                // Додаємо виділення до поточного елемента
+                this.classList.add('selected');
+            });
+        });
+
+        // Завдання 10
+        const escapingButton = document.getElementById('escapingButton');
+        const escapingContainer = document.getElementById('escapingContainer');
+        const containerRect = escapingContainer.getBoundingClientRect();
+        const buttonWidth = escapingButton.offsetWidth;
+        const buttonHeight = escapingButton.offsetHeight;
+
+        escapingButton.addEventListener('mouseover', function() {
+            const maxX = containerRect.width - buttonWidth;
+            const maxY = containerRect.height - buttonHeight;
+            
+            const newX = Math.floor(Math.random() * maxX);
+            const newY = Math.floor(Math.random() * maxY);
+            
+            this.style.left = `${newX}px`;
+            this.style.top = `${newY}px`;
+        });
+    </script>
+</body>
+</html>

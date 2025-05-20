@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота №2 - Рядки</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .task {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        pre {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Лабораторна робота №2 - Робота з рядками</h1>
+    <h2>Виконання завдань</h2>
+
+    <div class="task">
+        <h3>Завдання 1.1: Число у текстовому вигляді</h3>
+        <input type="number" id="numberInput" min="10" max="99" placeholder="Введіть двозначне число">
+        <button onclick="convertNumberToText()">Перетворити</button>
+        <p id="numberResult"></p>
+        <pre>
+function convertNumberToText() {
+    const number = parseInt(document.getElementById('numberInput').value);
+    const resultElement = document.getElementById('numberResult');
+    
+    if (isNaN(number) || number < 10 || number > 99) {
+        resultElement.textContent = "Будь ласка, введіть двозначне число!";
+        return;
+    }
+    
+    const units = ["", "один", "два", "три", "чотири", "п'ять", 
+                  "шість", "сім", "вісім", "дев'ять"];
+    const teens = ["десять", "одинадцять", "дванадцять", "тринадцять", 
+                  "чотирнадцять", "п'ятнадцять", "шістнадцять", 
+                  "сімнадцять", "вісімнадцять", "дев'ятнадцять"];
+    const tens = ["", "десять", "двадцять", "тридцять", "сорок", 
+                "п'ятдесят", "шістдесят", "сімдесят", 
+                "вісімдесят", "дев'яносто"];
+    
+    const ten = Math.floor(number / 10);
+    const unit = number % 10;
+    
+    let text;
+    
+    if (ten === 1) {
+        text = teens[unit];
+    } else {
+        text = tens[ten];
+        if (unit !== 0) {
+            text += " " + units[unit];
+        }
+    }
+    
+    resultElement.textContent = `${number} - ${text}`;
+}</pre>
+    </div>
+
+    <div class="task">
+        <h3>Завдання 1.2: Перетворення до camelCase</h3>
+        <input type="text" id="kebabInput" placeholder="Введіть css-властивість (напр. font-size)">
+        <button onclick="convertToCamelCase()">Перетворити</button>
+        <p id="camelResult"></p>
+        <pre>
+function convertToCamelCase() {
+    const kebabCase = document.getElementById('kebabInput').value;
+    const resultElement = document.getElementById('camelResult');
+    
+    if (!kebabCase.includes('-')) {
+        resultElement.textContent = "Введіть властивість з дефісом (напр. font-size)";
+        return;
+    }
+    
+    const camelCase = kebabCase.replace(/-([a-z])/g, (match, group) => group.toUpperCase());
+    resultElement.textContent = `${kebabCase} → ${camelCase}`;
+}</pre>
+    </div>
+
+    <div class="task">
+        <h3>Завдання 1.3: Перетворення до kebab-case</h3>
+        <input type="text" id="camelInput" placeholder="Введіть camelCase властивість (напр. fontSize)">
+        <button onclick="convertToKebabCase()">Перетворити</button>
+        <p id="kebabResult"></p>
+        <pre>
+function convertToKebabCase() {
+    const camelCase = document.getElementById('camelInput').value;
+    const resultElement = document.getElementById('kebabResult');
+    
+    const kebabCase = camelCase.replace(/[A-Z]/g, match => '-' + match.toLowerCase());
+    resultElement.textContent = `${camelCase} → ${kebabCase}`;
+}</pre>
+    </div>
+
+    <div class="task">
+        <h3>Завдання 1.4: Калькулятор з рядка</h3>
+        <input type="text" id="calcInput" placeholder="Введіть приклад (напр. 2 + 3 * 4)">
+        <button onclick="calculateFromString()">Обчислити</button>
+        <p id="calcResult"></p>
+        <pre>
+function calculateFromString() {
+    const expression = document.getElementById('calcInput').value;
+    const resultElement = document.getElementById('calcResult');
+    
+    try {
+        // Замінюємо всі небезпечні символи, крім цифр, операторів та пробілів
+        const sanitized = expression.replace(/[^\d+\-*/\s.]/g, '');
+        const result = eval(sanitized);
+        
+        if (isNaN(result) || !isFinite(result)) {
+            throw new Error("Невірний вираз");
+        }
+        
+        resultElement.textContent = `${expression} = ${result}`;
+    } catch (error) {
+        resultElement.textContent = "Помилка: введіть коректний математичний вираз";
+    }
+}</pre>
+    </div>
+
+    <div class="task">
+        <h3>Завдання 1.5: Заміна формату дати</h3>
+        <textarea id="dateText" placeholder="Введіть текст з датами у форматі рррр/мм/дд"></textarea>
+        <button onclick="replaceDateFormat()">Замінити формат</button>
+        <p>Результат:</p>
+        <div id="dateResult" style="border:1px solid #ddd; padding:10px; min-height:50px;"></div>
+        <pre>
+function replaceDateFormat() {
+    const text = document.getElementById('dateText').value;
+    const resultElement = document.getElementById('dateResult');
+    
+    // Регулярний вираз для дат у форматі рррр/мм/дд
+    const regex = /(\d{4})\/(\d{2})\/(\d{2})/g;
+    
+    // Замінюємо на формат дд.мм.рррр
+    const newText = text.replace(regex, '$3.$2.$1');
+    
+    resultElement.textContent = newText;
+}</pre>
+    </div>
+
+    <script>
+        // Завдання 1.1
+        function convertNumberToText() {
+            const number = parseInt(document.getElementById('numberInput').value);
+            const resultElement = document.getElementById('numberResult');
+            
+            if (isNaN(number) || number < 10 || number > 99) {
+                resultElement.textContent = "Будь ласка, введіть двозначне число!";
+                return;
+            }
+            
+            const units = ["", "один", "два", "три", "чотири", "п'ять", 
+                          "шість", "сім", "вісім", "дев'ять"];
+            const teens = ["десять", "одинадцять", "дванадцять", "тринадцять", 
+                          "чотирнадцять", "п'ятнадцять", "шістнадцять", 
+                          "сімнадцять", "вісімнадцять", "дев'ятнадцять"];
+            const tens = ["", "десять", "двадцять", "тридцять", "сорок", 
+                        "п'ятдесят", "шістдесят", "сімдесят", 
+                        "вісімдесят", "дев'яносто"];
+            
+            const ten = Math.floor(number / 10);
+            const unit = number % 10;
+            
+            let text;
+            
+            if (ten === 1) {
+                text = teens[unit];
+            } else {
+                text = tens[ten];
+                if (unit !== 0) {
+                    text += " " + units[unit];
+                }
+            }
+            
+            resultElement.textContent = `${number} - ${text}`;
+        }
+
+        // Завдання 1.2
+        function convertToCamelCase() {
+            const kebabCase = document.getElementById('kebabInput').value;
+            const resultElement = document.getElementById('camelResult');
+            
+            if (!kebabCase.includes('-')) {
+                resultElement.textContent = "Введіть властивість з дефісом (напр. font-size)";
+                return;
+            }
+            
+            const camelCase = kebabCase.replace(/-([a-z])/g, (match, group) => group.toUpperCase());
+            resultElement.textContent = `${kebabCase} → ${camelCase}`;
+        }
+
+        // Завдання 1.3
+        function convertToKebabCase() {
+            const camelCase = document.getElementById('camelInput').value;
+            const resultElement = document.getElementById('kebabResult');
+            
+            const kebabCase = camelCase.replace(/[A-Z]/g, match => '-' + match.toLowerCase());
+            resultElement.textContent = `${camelCase} → ${kebabCase}`;
+        }
+
+        // Завдання 1.4
+        function calculateFromString() {
+            const expression = document.getElementById('calcInput').value;
+            const resultElement = document.getElementById('calcResult');
+            
+            try {
+                // Замінюємо всі небезпечні символи, крім цифр, операторів та пробілів
+                const sanitized = expression.replace(/[^\d+\-*/\s.]/g, '');
+                const result = eval(sanitized);
+                
+                if (isNaN(result) || !isFinite(result)) {
+                    throw new Error("Невірний вираз");
+                }
+                
+                resultElement.textContent = `${expression} = ${result}`;
+            } catch (error) {
+                resultElement.textContent = "Помилка: введіть коректний математичний вираз";
+            }
+        }
+
+        // Завдання 1.5
+        function replaceDateFormat() {
+            const text = document.getElementById('dateText').value;
+            const resultElement = document.getElementById('dateResult');
+            
+            // Регулярний вираз для дат у форматі рррр/мм/дд
+            const regex = /(\d{4})\/(\d{2})\/(\d{2})/g;
+            
+            // Замінюємо на формат дд.мм.рррр
+            const newText = text.replace(regex, '$3.$2.$1');
+            
+            resultElement.textContent = newText;
+        }
+    </script>
+</body>
+</html>

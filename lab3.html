@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота №3</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .task {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        pre {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        textarea, input {
+            width: 100%;
+            margin: 10px 0;
+            padding: 8px;
+        }
+        #tableResult {
+            margin: 10px 0;
+            border-collapse: collapse;
+        }
+        #tableResult td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        #headersContainer {
+            margin: 10px 0;
+        }
+        #currentDate {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+        .result-box {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Лабораторна робота №3</h1>
+    <h2>Функції, Дата та час, Регулярні вирази</h2>
+
+    <!-- Завдання 1: Функції -->
+    <div class="task">
+        <h2>Завдання 1: Функції</h2>
+
+        <div class="sub-task">
+            <h3>1.1 Текст з різним розміром шрифту</h3>
+            <input type="text" id="textInput" placeholder="Введіть текст">
+            <input type="number" id="fontSizeInput" placeholder="Розмір шрифту (px)">
+            <button onclick="changeFontSize()">Змінити розмір</button>
+            <p id="fontSizeResult" style="font-size:16px;">Тут буде результат</p>
+            <pre>
+function changeFontSize() {
+    const text = document.getElementById('textInput').value;
+    const size = document.getElementById('fontSizeInput').value;
+    const result = document.getElementById('fontSizeResult');
+    
+    if (!text || !size) {
+        alert("Будь ласка, введіть текст та розмір шрифту");
+        return;
+    }
+    
+    result.textContent = text;
+    result.style.fontSize = `${size}px`;
+}</pre>
+        </div>
+
+        <div class="sub-task">
+            <h3>1.2 HTML-код таблиці з рядків</h3>
+            <textarea id="tableText" placeholder="Введіть рядки (кожен з нового рядка)"></textarea>
+            <button onclick="createTable()">Створити таблицю</button>
+            <div id="tableContainer"></div>
+            <pre>
+function createTable() {
+    const text = document.getElementById('tableText').value;
+    const container = document.getElementById('tableContainer');
+    
+    if (!text.trim()) {
+        alert("Будь ласка, введіть текст");
+        return;
+    }
+    
+    const rows = text.split('\n');
+    let html = '&lt;table id="tableResult"&gt;';
+    
+    rows.forEach(row => {
+        html += `&lt;tr&gt;&lt;td&gt;${row}&lt;/td&gt;&lt;/tr&gt;`;
+    });
+    
+    html += '&lt;/table&gt;';
+    container.innerHTML = html;
+}</pre>
+        </div>
+
+        <div class="sub-task">
+            <h3>1.3 Створення N заголовків</h3>
+            <input type="number" id="headersCount" placeholder="Кількість заголовків">
+            <button onclick="createHeaders()">Створити заголовки</button>
+            <div id="headersContainer"></div>
+            <pre>
+function createHeaders() {
+    const count = parseInt(document.getElementById('headersCount').value);
+    const container = document.getElementById('headersContainer');
+    
+    if (isNaN(count) || count <= 0) {
+        alert("Будь ласка, введіть коректне число");
+        return;
+    }
+    
+    container.innerHTML = '';
+    
+    for (let i = 1; i <= count; i++) {
+        const header = document.createElement('h2');
+        header.textContent = `Header${i}`;
+        container.appendChild(header);
+    }
+}</pre>
+        </div>
+
+        <div class="sub-task">
+            <h3>1.4 Обробка параметрів</h3>
+            <textarea id="paramsInput" placeholder="Введіть параметри через кому (наприклад: Jane, 1, 3, like, 5, 9, read, 4, book)"></textarea>
+            <button onclick="processParams()">Обробити</button>
+            <div class="result-box">
+                <p id="sumResult"></p>
+                <p id="sentenceResult"></p>
+            </div>
+            <pre>
+function processParams() {
+    const input = document.getElementById('paramsInput').value;
+    const sumResult = document.getElementById('sumResult');
+    const sentenceResult = document.getElementById('sentenceResult');
+    
+    if (!input.trim()) {
+        alert("Будь ласка, введіть параметри");
+        return;
+    }
+    
+    const params = input.split(',').map(item => item.trim());
+    let numbers = [];
+    let words = [];
+    
+    params.forEach(param => {
+        if (!isNaN(param) && param.trim() !== '') {
+            numbers.push(parseFloat(param));
+        } else {
+            words.push(param);
+        }
+    });
+    
+    // Сума чисел
+    const sum = numbers.reduce((acc, num) => acc + num, 0);
+    
+    // Речення зі слів
+    const sentence = words.join(' ');
+    
+    sumResult.textContent = numbers.length > 0 ? `Сума чисел: ${sum}` : 'Числа не знайдено';
+    sentenceResult.textContent = words.length > 0 ? `Речення: ${sentence}` : 'Слова не знайдено';
+}</pre>
+        </div>
+    </div>
+
+    <!-- Завдання 2: Дата та час -->
+    <div class="task">
+        <h2>Завдання 2: Дата та час</h2>
+
+        <div class="sub-task">
+            <h3>2.1 Поточна дата</h3>
+            <button onclick="showCurrentDate()">Показати поточну дату</button>
+            <div id="currentDate"></div>
+            <pre>
+function showCurrentDate() {
+    const now = new Date();
+    const container = document.getElementById('currentDate');
+    
+    const months = [
+        'січня', 'лютого', 'березня', 'квітня', 'травня', 'червня',
+        'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'
+    ];
+    
+    const daysOfWeek = [
+        'неділя', 'понеділок', 'вівторок', 'середа',
+        'четвер', 'п\'ятниця', 'субота'
+    ];
+    
+    const day = now.getDate();
+    const month = months[now.getMonth()];
+    const year = now.getFullYear();
+    const dayOfWeek = daysOfWeek[now.getDay()];
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    
+    const html = `
+        &lt;p&gt;Дата: ${day} ${month} ${year} року&lt;/p&gt;
+        &lt;p&gt;День тижня: ${dayOfWeek}&lt;/p&gt;
+        &lt;p&gt;Час: ${hours}:${minutes}&lt;/p&gt;
+    `;
+    
+    container.innerHTML = html;
+}</pre>
+        </div>
+
+        <div class="sub-task">
+            <h3>2.2 Форматування введеної дати</h3>
+            <input type="text" id="userDateInput" placeholder="Введіть дату (дд.мм.рррр, дд/мм/рррр або дд-мм-рррр)">
+            <button onclick="formatUserDate()">Форматувати дату</button>
+            <div id="formattedDate" class="result-box"></div>
+            <pre>
+function formatUserDate() {
+    const input = document.getElementById('userDateInput').value.trim();
+    const result = document.getElementById('formattedDate');
+    
+    if (!input) {
+        alert("Будь ласка, введіть дату");
+        return;
+    }
+    
+    // Розбиваємо дату за допомогою регулярного виразу
+    const match = input.match(/^(\d{2})[./-](\d{2})[./-](\d{4})$/);
+    
+    if (!match) {
+        result.textContent = "Невірний формат дати";
+        return;
+    }
+    
+    const day = parseInt(match[1]);
+    const month = parseInt(match[2]) - 1; // Місяці в JS від 0 до 11
+    const year = parseInt(match[3]);
+    
+    const inputDate = new Date(year, month, day);
+    
+    // Перевірка на коректність дати
+    if (isNaN(inputDate.getTime())) {
+        result.textContent = "Невірна дата";
+        return;
+    }
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    const diffTime = today - inputDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    let output;
+    
+    if (inputDate.toDateString() === today.toDateString()) {
+        output = "Сьогодні";
+    } else if (inputDate.toDateString() === yesterday.toDateString()) {
+        output = "Вчора";
+    } else if (diffDays >= 2 && diffDays <= 6) {
+        output = `${diffDays} ${getDayWord(diffDays)} тому`;
+    } else if (diffDays === 7) {
+        output = "Тиждень тому";
+    } else if (diffDays >= 365) {
+        output = "Рік тому";
+    } else {
+        output = `${year}.${(month + 1).toString().padStart(2, '0')}.${day.toString().padStart(2, '0')}`;
+    }
+    
+    result.textContent = output;
+    
+    function getDayWord(days) {
+        if (days === 1) return 'день';
+        if (days >= 2 && days <= 4) return 'дні';
+        return 'днів';
+    }
+}</pre>
+        </div>
+    </div>
+
+    <!-- Завдання 3: Регулярні вирази -->
+    <div class="task">
+        <h2>Завдання 3: Регулярні вирази</h2>
+
+        <div class="sub-task">
+            <h3>3.1 Пошук дат у тексті</h3>
+            <textarea id="datesText" placeholder="Введіть текст з датами у форматі РРРР-ММ-ДД"></textarea>
+            <button onclick="findDates()">Знайти дати</button>
+            <div id="foundDates" class="result-box"></div>
+            <pre>
+function findDates() {
+    const text = document.getElementById('datesText').value;
+    const result = document.getElementById('foundDates');
+    
+    if (!text.trim()) {
+        alert("Будь ласка, введіть текст");
+        return;
+    }
+    
+    // Регулярний вираз для дат у форматі РРРР-ММ-ДД
+    const dateRegex = /\b(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])\b/g;
+    const dates = [];
+    let match;
+    
+    while ((match = dateRegex.exec(text)) !== null) {
+        const year = parseInt(match[1]);
+        const month = parseInt(match[2]);
+        const day = parseInt(match[3]);
+        
+        // Перевірка на валідність дати
+        const date = new Date(year, month - 1, day);
+        if (date.getFullYear() === year && 
+            date.getMonth() === month - 1 && 
+            date.getDate() === day) {
+            dates.push(match[0]);
+        }
+    }
+    
+    if (dates.length > 0) {
+        result.textContent = "Знайдені дати: " + dates.join(', ');
+    } else {
+        result.textContent = "Дати не знайдено або вони невалідні";
+    }
+}</pre>
+        </div>
+
+        <div class="sub-task">
+            <h3>3.2 Перетворення snake_case до camelCase</h3>
+            <input type="text" id="snakeCaseInput" placeholder="Введіть ім'я змінної в snake_case">
+            <button onclick="convertToCamelCase()">Перетворити</button>
+            <div id="camelCaseResult" class="result-box"></div>
+            <pre>
+function convertToCamelCase() {
+    const input = document.getElementById('snakeCaseInput').value.trim();
+    const result = document.getElementById('camelCaseResult');
+    
+    if (!input) {
+        alert("Будь ласка, введіть ім'я змінної");
+        return;
+    }
+    
+    // Перетворення snake_case до camelCase
+    const camelCase = input.replace(/_([a-z])/g, (match, group) => group.toUpperCase());
+    
+    result.textContent = camelCase;
+}</pre>
+        </div>
+
+        <div class="sub-task">
+            <h3>3.3 Перетворення camelCase до snake_case</h3>
+            <input type="text" id="camelCaseInput" placeholder="Введіть ім'я змінної в camelCase">
+            <button onclick="convertToSnakeCase()">Перетворити</button>
+            <div id="snakeCaseResult" class="result-box"></div>
+            <pre>
+function convertToSnakeCase() {
+    const input = document.getElementById('camelCaseInput').value.trim();
+    const result = document.getElementById('snakeCaseResult');
+    
+    if (!input) {
+        alert("Будь ласка, введіть ім'я змінної");
+        return;
+    }
+    
+    // Перетворення camelCase до snake_case
+    const snakeCase = input.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+    
+    result.textContent = snakeCase;
+}</pre>
+        </div>
+
+        <div class="sub-task">
+            <h3>3.4 Пошук кольорів у HEX-форматі</h3>
+            <textarea id="colorText" placeholder="Введіть текст з кольорами у форматі #ABC або #ABCDEF"></textarea>
+            <button onclick="findHexColors()">Знайти кольори</button>
+            <div id="foundColors" class="result-box"></div>
+            <pre>
+function findHexColors() {
+    const text = document.getElementById('colorText').value;
+    const result = document.getElementById('foundColors');
+    
+    if (!text.trim()) {
+        alert("Будь ласка, введіть текст");
+        return;
+    }
+    
+    // Регулярний вираз для HEX-кольорів (#ABC або #ABCDEF)
+    const colorRegex = /#([A-Fa-f0-9]{3}){1,2}\b/g;
+    const colors = text.match(colorRegex);
+    
+    if (colors && colors.length > 0) {
+        result.textContent = "Знайдені кольори: " + colors.join(', ');
+    } else {
+        result.textContent = "Кольори у HEX-форматі не знайдено";
+    }
+}</pre>
+        </div>
+    </div>
+
+    <script>
+        // Завдання 1.1
+        function changeFontSize() {
+            const text = document.getElementById('textInput').value;
+            const size = document.getElementById('fontSizeInput').value;
+            const result = document.getElementById('fontSizeResult');
+            
+            if (!text || !size) {
+                alert("Будь ласка, введіть текст та розмір шрифту");
+                return;
+            }
+            
+            result.textContent = text;
+            result.style.fontSize = `${size}px`;
+        }
+
+        // Завдання 1.2
+        function createTable() {
+            const text = document.getElementById('tableText').value;
+            const container = document.getElementById('tableContainer');
+            
+            if (!text.trim()) {
+                alert("Будь ласка, введіть текст");
+                return;
+            }
+            
+            const rows = text.split('\n');
+            let html = '<table id="tableResult">';
+            
+            rows.forEach(row => {
+                html += `<tr><td>${row}</td></tr>`;
+            });
+            
+            html += '</table>';
+            container.innerHTML = html;
+        }
+
+        // Завдання 1.3
+        function createHeaders() {
+            const count = parseInt(document.getElementById('headersCount').value);
+            const container = document.getElementById('headersContainer');
+            
+            if (isNaN(count) || count <= 0) {
+                alert("Будь ласка, введіть коректне число");
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            for (let i = 1; i <= count; i++) {
+                const header = document.createElement('h2');
+                header.textContent = `Header${i}`;
+                container.appendChild(header);
+            }
+        }
+
+        // Завдання 1.4
+        function processParams() {
+            const input = document.getElementById('paramsInput').value;
+            const sumResult = document.getElementById('sumResult');
+            const sentenceResult = document.getElementById('sentenceResult');
+            
+            if (!input.trim()) {
+                alert("Будь ласка, введіть параметри");
+                return;
+            }
+            
+            const params = input.split(',').map(item => item.trim());
+            let numbers = [];
+            let words = [];
+            
+            params.forEach(param => {
+                if (!isNaN(param) && param.trim() !== '') {
+                    numbers.push(parseFloat(param));
+                } else {
+                    words.push(param);
+                }
+            });
+            
+            // Сума чисел
+            const sum = numbers.reduce((acc, num) => acc + num, 0);
+            
+            // Речення зі слів
+            const sentence = words.join(' ');
+            
+            sumResult.textContent = numbers.length > 0 ? `Сума чисел: ${sum}` : 'Числа не знайдено';
+            sentenceResult.textContent = words.length > 0 ? `Речення: ${sentence}` : 'Слова не знайдено';
+        }
+
+        // Завдання 2.1
+        function showCurrentDate() {
+            const now = new Date();
+            const container = document.getElementById('currentDate');
+            
+            const months = [
+                'січня', 'лютого', 'березня', 'квітня', 'травня', 'червня',
+                'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'
+            ];
+            
+            const daysOfWeek = [
+                'неділя', 'понеділок', 'вівторок', 'середа',
+                'четвер', 'п\'ятниця', 'субота'
+            ];
+            
+            const day = now.getDate();
+            const month = months[now.getMonth()];
+            const year = now.getFullYear();
+            const dayOfWeek = daysOfWeek[now.getDay()];
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            
+            const html = `
+                <p>Дата: ${day} ${month} ${year} року</p>
+                <p>День тижня: ${dayOfWeek}</p>
+                <p>Час: ${hours}:${minutes}</p>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // Завдання 2.2
+        function formatUserDate() {
+            const input = document.getElementById('userDateInput').value.trim();
+            const result = document.getElementById('formattedDate');
+            
+            if (!input) {
+                alert("Будь ласка, введіть дату");
+                return;
+            }
+            
+            // Розбиваємо дату за допомогою регулярного виразу
+            const match = input.match(/^(\d{2})[./-](\d{2})[./-](\d{4})$/);
+            
+            if (!match) {
+                result.textContent = "Невірний формат дати";
+                return;
+            }
+            
+            const day = parseInt(match[1]);
+            const month = parseInt(match[2]) - 1; // Місяці в JS від 0 до 11
+            const year = parseInt(match[3]);
+            
+            const inputDate = new Date(year, month, day);
+            
+            // Перевірка на коректність дати
+            if (isNaN(inputDate.getTime())) {
+                result.textContent = "Невірна дата";
+                return;
+            }
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            const diffTime = today - inputDate;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            let output;
+            
+            if (inputDate.toDateString() === today.toDateString()) {
+                output = "Сьогодні";
+            } else if (inputDate.toDateString() === yesterday.toDateString()) {
+                output = "Вчора";
+            } else if (diffDays >= 2 && diffDays <= 6) {
+                output = `${diffDays} ${getDayWord(diffDays)} тому`;
+            } else if (diffDays === 7) {
+                output = "Тиждень тому";
+            } else if (diffDays >= 365) {
+                output = "Рік тому";
+            } else {
+                output = `${year}.${(month + 1).toString().padStart(2, '0')}.${day.toString().padStart(2, '0')}`;
+            }
+            
+            result.textContent = output;
+            
+            function getDayWord(days) {
+                if (days === 1) return 'день';
+                if (days >= 2 && days <= 4) return 'дні';
+                return 'днів';
+            }
+        }
+
+        // Завдання 3.1
+        function findDates() {
+            const text = document.getElementById('datesText').value;
+            const result = document.getElementById('foundDates');
+            
+            if (!text.trim()) {
+                alert("Будь ласка, введіть текст");
+                return;
+            }
+            
+            // Регулярний вираз для дат у форматі РРРР-ММ-ДД
+            const dateRegex = /\b(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])\b/g;
+            const dates = [];
+            let match;
+            
+            while ((match = dateRegex.exec(text)) !== null) {
+                const year = parseInt(match[1]);
+                const month = parseInt(match[2]);
+                const day = parseInt(match[3]);
+                
+                // Перевірка на валідність дати
+                const date = new Date(year, month - 1, day);
+                if (date.getFullYear() === year && 
+                    date.getMonth() === month - 1 && 
+                    date.getDate() === day) {
+                    dates.push(match[0]);
+                }
+            }
+            
+            if (dates.length > 0) {
+                result.textContent = "Знайдені дати: " + dates.join(', ');
+            } else {
+                result.textContent = "Дати не знайдено або вони невалідні";
+            }
+        }
+
+        // Завдання 3.2
+        function convertToCamelCase() {
+            const input = document.getElementById('snakeCaseInput').value.trim();
+            const result = document.getElementById('camelCaseResult');
+            
+            if (!input) {
+                alert("Будь ласка, введіть ім'я змінної");
+                return;
+            }
+            
+            // Перетворення snake_case до camelCase
+            const camelCase = input.replace(/_([a-z])/g, (match, group) => group.toUpperCase());
+            
+            result.textContent = camelCase;
+        }
+
+        // Завдання 3.3
+        function convertToSnakeCase() {
+            const input = document.getElementById('camelCaseInput').value.trim();
+            const result = document.getElementById('snakeCaseResult');
+            
+            if (!input) {
+                alert("Будь ласка, введіть ім'я змінної");
+                return;
+            }
+            
+            // Перетворення camelCase до snake_case
+            const snakeCase = input.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+            
+            result.textContent = snakeCase;
+        }
+
+        // Завдання 3.4
+        function findHexColors() {
+            const text = document.getElementById('colorText').value;
+            const result = document.getElementById('foundColors');
+            
+            if (!text.trim()) {
+                alert("Будь ласка, введіть текст");
+                return;
+            }
+            
+            // Регулярний вираз для HEX-кольорів (#ABC або #ABCDEF)
+            const colorRegex = /#([A-Fa-f0-9]{3}){1,2}\b/g;
+            const colors = text.match(colorRegex);
+            
+            if (colors && colors.length > 0) {
+                result.textContent = "Знайдені кольори: " + colors.join(', ');
+            } else {
+                result.textContent = "Кольори у HEX-форматі не знайдено";
+            }
+        }
+    </script>
+</body>
+</html>

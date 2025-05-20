@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота №1 - JavaScript</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .task {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        pre {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Лабораторна робота №1 - JavaScript</h1>
+    <h2>Виконання завдань</h2>
+
+    <div class="task">
+        <h3>Завдання 1.1: Бургери та решта</h3>
+        <button onclick="calculateBurgers()">Запустити</button>
+        <pre>
+function calculateBurgers() {
+    const money = parseFloat(prompt("Введіть суму грошей у гаманці:"));
+    const burgerPrice = parseFloat(prompt("Введіть ціну одного бургера:"));
+    
+    if (isNaN(money) || isNaN(burgerPrice) || money < 0 || burgerPrice <= 0) {
+        alert("Будь ласка, введіть коректні значення!");
+        return;
+    }
+    
+    const burgers = Math.floor(money / burgerPrice);
+    const change = money % burgerPrice;
+    
+    alert(`Ви можете купити ${burgers} бургерів. Ваша решта: ${change.toFixed(2)} грн.`);
+}</pre>
+    </div>
+
+    <div class="task">
+        <h3>Завдання 1.2: Переміщення останньої цифри</h3>
+        <button onclick="moveLastDigit()">Запустити</button>
+        <pre>
+function moveLastDigit() {
+    let number = prompt("Введіть п'ятизначне число:");
+    
+    if (number.length !== 5 || isNaN(number)) {
+        alert("Будь ласка, введіть коректне п'ятизначне число!");
+        return;
+    }
+    
+    const lastDigit = number.slice(-1);
+    const newNumber = lastDigit + number.slice(0, -1);
+    
+    alert(`Нове число: ${newNumber}`);
+}</pre>
+    </div>
+
+    <div class="task">
+        <h3>Завдання 1.3: Попередня та наступна дата</h3>
+        <button onclick="calculateDates()">Запустити</button>
+        <pre>
+function isLeapYear(year) {
+    return (year % 400 === 0) || (year % 100 !== 0 && year % 4 === 0);
+}
+
+function getDaysInMonth(month, year) {
+    if (month === 2) {
+        return isLeapYear(year) ? 29 : 28;
+    } else if ([4, 6, 9, 11].includes(month)) {
+        return 30;
+    } else {
+        return 31;
+    }
+}
+
+function calculateDates() {
+    const day = parseInt(prompt("Введіть день:"));
+    const month = parseInt(prompt("Введіть місяць:"));
+    const year = parseInt(prompt("Введіть рік:"));
+    
+    // Попередня дата
+    let prevDay = day - 1;
+    let prevMonth = month;
+    let prevYear = year;
+    
+    if (prevDay < 1) {
+        prevMonth--;
+        if (prevMonth < 1) {
+            prevMonth = 12;
+            prevYear--;
+        }
+        prevDay = getDaysInMonth(prevMonth, prevYear);
+    }
+    
+    // Наступна дата
+    let nextDay = day + 1;
+    let nextMonth = month;
+    let nextYear = year;
+    const daysInCurrentMonth = getDaysInMonth(month, year);
+    
+    if (nextDay > daysInCurrentMonth) {
+        nextDay = 1;
+        nextMonth++;
+        if (nextMonth > 12) {
+            nextMonth = 1;
+            nextYear++;
+        }
+    }
+    
+    alert(`Попередня дата: ${prevDay}.${prevMonth}.${prevYear}\nНаступна дата: ${nextDay}.${nextMonth}.${nextYear}`);
+}</pre>
+    </div>
+
+    <div class="task">
+        <h3>Завдання 1.4: Вік з правильним відмінюванням</h3>
+        <button onclick="getAgeDescription()">Запустити</button>
+        <pre>
+function getAgeDescription() {
+    const age = parseInt(prompt("Введіть вік (1-69):"));
+    
+    if (isNaN(age) || age < 1 || age > 69) {
+        alert("Будь ласка, введіть вік від 1 до 69!");
+        return;
+    }
+    
+    const units = age % 10;
+    const tens = Math.floor(age / 10);
+    
+    let description;
+    
+    if (tens === 1) {
+        description = `${age} років`;
+    } else {
+        if (units === 1) {
+            description = `${age} рік`;
+        } else if (units >= 2 && units <= 4) {
+            description = `${age} роки`;
+        } else {
+            description = `${age} років`;
+        }
+    }
+    
+    alert(description);
+}</pre>
+    </div>
+
+    <div class="task">
+        <h3>Завдання 1.5: Циклічний калькулятор</h3>
+        <button onclick="calculator()">Запустити</button>
+        <pre>
+function calculator() {
+    let continueCalculation = true;
+    
+    while (continueCalculation) {
+        const num1 = parseFloat(prompt("Введіть перше число:"));
+        const num2 = parseFloat(prompt("Введіть друге число:"));
+        const operator = prompt("Введіть оператор (+, -, *, /):");
+        
+        let result;
+        
+        switch (operator) {
+            case '+':
+                result = num1 + num2;
+                break;
+            case '-':
+                result = num1 - num2;
+                break;
+            case '*':
+                result = num1 * num2;
+                break;
+            case '/':
+                result = num1 / num2;
+                break;
+            default:
+                alert("Невірний оператор!");
+                continue;
+        }
+        
+        alert(`Результат: ${result}`);
+        
+        continueCalculation = confirm("Бажаєте вирішити ще один приклад?");
+    }
+}</pre>
+    </div>
+
+    <div class="task">
+        <h3>Завдання 1.6: Сума введених чисел</h3>
+        <button onclick="sumNumbers()">Запустити</button>
+        <pre>
+function sumNumbers() {
+    let sum = 0;
+    let numbers = [];
+    let input;
+    
+    do {
+        input = parseFloat(prompt("Введіть число (0 для завершення):"));
+        if (!isNaN(input)) {
+            if (input !== 0) {
+                numbers.push(input);
+                sum += input;
+            }
+        } else {
+            alert("Будь ласка, введіть число!");
+        }
+    } while (input !== 0);
+    
+    const equation = numbers.join(" + ") + " + 0 = " + sum;
+    alert(equation);
+}</pre>
+    </div>
+
+    <div class="task">
+        <h3>Завдання 1.7: Піднесення другої цифри до степеня</h3>
+        <button onclick="powerSecondDigit()">Запустити</button>
+        <pre>
+function powerSecondDigit() {
+    const S = prompt("Введіть число S:");
+    const K = parseInt(prompt("Введіть цифру K:"));
+    
+    if (isNaN(S) || S.length < 2 || isNaN(K) || K < 0) {
+        alert("Будь ласка, введіть коректні значення!");
+        return;
+    }
+    
+    const secondDigit = parseInt(S[1]);
+    const result = Math.pow(secondDigit, K);
+    
+    alert(`Друга цифра ${secondDigit} у степені ${K} дорівнює ${result}`);
+}</pre>
+    </div>
+
+    <script>
+        // Завдання 1.1
+        function calculateBurgers() {
+            const money = parseFloat(prompt("Введіть суму грошей у гаманці:"));
+            const burgerPrice = parseFloat(prompt("Введіть ціну одного бургера:"));
+            
+            if (isNaN(money) || isNaN(burgerPrice) || money < 0 || burgerPrice <= 0) {
+                alert("Будь ласка, введіть коректні значення!");
+                return;
+            }
+            
+            const burgers = Math.floor(money / burgerPrice);
+            const change = money % burgerPrice;
+            
+            alert(`Ви можете купити ${burgers} бургерів. Ваша решта: ${change.toFixed(2)} грн.`);
+        }
+
+        // Завдання 1.2
+        function moveLastDigit() {
+            let number = prompt("Введіть п'ятизначне число:");
+            
+            if (number.length !== 5 || isNaN(number)) {
+                alert("Будь ласка, введіть коректне п'ятизначне число!");
+                return;
+            }
+            
+            const lastDigit = number.slice(-1);
+            const newNumber = lastDigit + number.slice(0, -1);
+            
+            alert(`Нове число: ${newNumber}`);
+        }
+
+        // Завдання 1.3
+        function isLeapYear(year) {
+            return (year % 400 === 0) || (year % 100 !== 0 && year % 4 === 0);
+        }
+
+        function getDaysInMonth(month, year) {
+            if (month === 2) {
+                return isLeapYear(year) ? 29 : 28;
+            } else if ([4, 6, 9, 11].includes(month)) {
+                return 30;
+            } else {
+                return 31;
+            }
+        }
+
+        function calculateDates() {
+            const day = parseInt(prompt("Введіть день:"));
+            const month = parseInt(prompt("Введіть місяць:"));
+            const year = parseInt(prompt("Введіть рік:"));
+            
+            // Попередня дата
+            let prevDay = day - 1;
+            let prevMonth = month;
+            let prevYear = year;
+            
+            if (prevDay < 1) {
+                prevMonth--;
+                if (prevMonth < 1) {
+                    prevMonth = 12;
+                    prevYear--;
+                }
+                prevDay = getDaysInMonth(prevMonth, prevYear);
+            }
+            
+            // Наступна дата
+            let nextDay = day + 1;
+            let nextMonth = month;
+            let nextYear = year;
+            const daysInCurrentMonth = getDaysInMonth(month, year);
+            
+            if (nextDay > daysInCurrentMonth) {
+                nextDay = 1;
+                nextMonth++;
+                if (nextMonth > 12) {
+                    nextMonth = 1;
+                    nextYear++;
+                }
+            }
+            
+            alert(`Попередня дата: ${prevDay}.${prevMonth}.${prevYear}\nНаступна дата: ${nextDay}.${nextMonth}.${nextYear}`);
+        }
+
+        // Завдання 1.4
+        function getAgeDescription() {
+            const age = parseInt(prompt("Введіть вік (1-69):"));
+            
+            if (isNaN(age) || age < 1 || age > 69) {
+                alert("Будь ласка, введіть вік від 1 до 69!");
+                return;
+            }
+            
+            const units = age % 10;
+            const tens = Math.floor(age / 10);
+            
+            let description;
+            
+            if (tens === 1) {
+                description = `${age} років`;
+            } else {
+                if (units === 1) {
+                    description = `${age} рік`;
+                } else if (units >= 2 && units <= 4) {
+                    description = `${age} роки`;
+                } else {
+                    description = `${age} років`;
+                }
+            }
+            
+            alert(description);
+        }
+
+        // Завдання 1.5
+        function calculator() {
+            let continueCalculation = true;
+            
+            while (continueCalculation) {
+                const num1 = parseFloat(prompt("Введіть перше число:"));
+                const num2 = parseFloat(prompt("Введіть друге число:"));
+                const operator = prompt("Введіть оператор (+, -, *, /):");
+                
+                let result;
+                
+                switch (operator) {
+                    case '+':
+                        result = num1 + num2;
+                        break;
+                    case '-':
+                        result = num1 - num2;
+                        break;
+                    case '*':
+                        result = num1 * num2;
+                        break;
+                    case '/':
+                        result = num1 / num2;
+                        break;
+                    default:
+                        alert("Невірний оператор!");
+                        continue;
+                }
+                
+                alert(`Результат: ${result}`);
+                
+                continueCalculation = confirm("Бажаєте вирішити ще один приклад?");
+            }
+        }
+
+        // Завдання 1.6
+        function sumNumbers() {
+            let sum = 0;
+            let numbers = [];
+            let input;
+            
+            do {
+                input = parseFloat(prompt("Введіть число (0 для завершення):"));
+                if (!isNaN(input)) {
+                    if (input !== 0) {
+                        numbers.push(input);
+                        sum += input;
+                    }
+                } else {
+                    alert("Будь ласка, введіть число!");
+                }
+            } while (input !== 0);
+            
+            const equation = numbers.join(" + ") + " + 0 = " + sum;
+            alert(equation);
+        }
+
+        // Завдання 1.7
+        function powerSecondDigit() {
+            const S = prompt("Введіть число S:");
+            const K = parseInt(prompt("Введіть цифру K:"));
+            
+            if (isNaN(S) || S.length < 2 || isNaN(K) || K < 0) {
+                alert("Будь ласка, введіть коректні значення!");
+                return;
+            }
+            
+            const secondDigit = parseInt(S[1]);
+            const result = Math.pow(secondDigit, K);
+            
+            alert(`Друга цифра ${secondDigit} у степені ${K} дорівнює ${result}`);
+        }
+    </script>
+</body>
+</html>
